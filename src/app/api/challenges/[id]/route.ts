@@ -7,7 +7,7 @@ import { authenticateRequest } from '@/lib/auth';
 
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const payload = authenticateRequest(req);
@@ -17,7 +17,7 @@ export async function GET(
 
         await connectToDatabase();
 
-        const challengeId = (await params).id;
+        const { id: challengeId } = await params;
         const challenge = await Challenge.findById(challengeId);
 
         if (!challenge) {
